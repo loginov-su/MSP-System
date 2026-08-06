@@ -34,7 +34,7 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 24px;
+      padding: 72px 24px 24px;
     }
 
     .container {
@@ -204,9 +204,49 @@
       background: var(--accent);
       color: #fff;
     }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+      z-index: 10;
+    }
+
+    .nav__brand {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .nav__links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      margin-left: 18px;
+    }
+
+    .nav__links a:hover {
+      color: var(--accent);
+    }
   </style>
 </head>
 <body>
+  <nav class="nav">
+    <span class="nav__brand">Демо: выход</span>
+    <span class="nav__links">
+      <a href="/demo">Хаб</a>
+      <a href="/create_exit">Создать</a>
+      <a href="/exit/application/1">Заявка</a>
+      <a href="/guard/application/all">Охрана</a>
+    </span>
+  </nav>
+
   <div class="container">
     <div class="header">
       <div>

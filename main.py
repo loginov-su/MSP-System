@@ -25,6 +25,11 @@ def login():
 
 
 # --- ВРЕМЕННЫЕ (ТЕСТОВЫЕ) МАРШРУТЫ — удалить позже ---
+@app.route("/demo")
+def test_demo():
+    return render_template("test_app/index.html")
+
+
 @app.route("/create_exit")
 def test_create_exit():
     return render_template("test_app/create_exit.html")

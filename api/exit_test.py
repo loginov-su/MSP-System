@@ -37,6 +37,10 @@ def make_app():
     app = Flask(__name__)
     app.secret_key = 'test-secret'
 
+    @app.route('/demo')
+    def demo_index():
+        return _render('index.html')
+
     @app.route('/create_exit')
     def create_exit_page():
         return _render('create_exit.html')
@@ -91,6 +95,12 @@ def run():
     passed = True
     app = make_app()
     client = app.test_client()
+
+    print('Демо-хаб (/demo)')
+    resp = client.get('/demo')
+    html = resp.get_data(as_text=True)
+    passed &= check('хаб содержит шаги флоу', 'Шаг 1' in html and 'Шаг 3' in html)
+    passed &= check('ссылки на все страницы есть', '/guard/application/all' in html and '/create_exit' in html)
 
     print('1) Страница создания заявки (/create_exit)')
     resp = client.get('/create_exit')
