@@ -1,0 +1,58 @@
+{% macro nav_item(href, active, label) %}
+<a href="{{ href }}"
+   class="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-medium {% if active %}brand-bg text-white shadow-lg shadow-blue-500/30{% else %}text-zinc-700 hover:bg-[#4A75FF]/10 hover:text-[#4A75FF]{% endif %}">
+    <span class="shrink-0">{% if caller %}{{ caller() }}{% endif %}</span>
+    <span>{{ label }}</span>
+</a>
+{% endmacro %}
+
+{# Стандартные пункты сайдбара #}
+{% set nav_items = [
+  ('/home', 'Главная', 'home'),
+  ('/exit/new', 'Заявка на выход', 'plus'),
+  ('/exit/history', 'История заявок', 'clock'),
+  ('/guard', 'Охрана', 'shield'),
+  ('/guest', 'Пропуск гостя', 'ticket'),
+] %}
+
+{% macro sidebar_items(active_route) %}
+{% for href, label, icon in nav_items %}
+<a href="{{ href }}"
+   class="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-medium {% if active_route == href %}brand-bg text-white shadow-lg shadow-blue-500/30{% else %}text-zinc-700 hover:bg-[#4A75FF]/10 hover:text-[#4A75FF]{% endif %}">
+    <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        {% if icon == 'home' %}
+        <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd"/>
+        {% elif icon == 'plus' %}
+        <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/>
+        {% elif icon == 'clock' %}
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clip-rule="evenodd"/>
+        {% elif icon == 'shield' %}
+        <path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 0 1 .678 0 11.947 11.947 0 0 0 7.078 2.749.5.5 0 0 1 .479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 0 1-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 0 1 .48-.425 11.947 11.947 0 0 0 7.077-2.749Zm4.96 11.97a.75.75 0 1 0 1.06 1.06c2.36-2.36 2.693-6.534 1-9.615a.75.75 0 0 0-1.35.656c1.25 2.48.99 5.72-.71 7.9Z" clip-rule="evenodd"/>
+        {% elif icon == 'ticket' %}
+        <path d="M13 3v1.5h.25a1.25 1.25 0 0 1 1.25 1.25v3.5c0 .345.28.625.625.625h2.375a.75.75 0 0 1 0 1.5h-2.375a.625.625 0 0 0-.625.625v3.5a1.25 1.25 0 0 1-1.25 1.25H13v1.5h.75a2.25 2.25 0 0 0 2.25-2.25V5.25a2.25 2.25 0 0 0-2.25-2.25H13Z"/>
+        {% endif %}
+    </svg>
+    {{ label }}
+</a>
+{% endfor %}
+{% endmacro %}
+
+{% macro navbar_items(active_route) %}
+{% for href, label, icon in nav_items %}
+<a href="{{ href }}" class="flex size-9 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950" aria-label="{{ label }}">
+    <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        {% if icon == 'home' %}
+        <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd"/>
+        {% elif icon == 'plus' %}
+        <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/>
+        {% elif icon == 'clock' %}
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clip-rule="evenodd"/>
+        {% elif icon == 'shield' %}
+        <path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 0 1 .678 0 11.947 11.947 0 0 0 7.078 2.749.5.5 0 0 1 .479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 0 1-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 0 1 .48-.425 11.947 11.947 0 0 0 7.077-2.749Zm4.96 11.97a.75.75 0 1 0 1.06 1.06c2.36-2.36 2.693-6.534 1-9.615a.75.75 0 0 0-1.35.656c1.25 2.48.99 5.72-.71 7.9Z" clip-rule="evenodd"/>
+        {% elif icon == 'ticket' %}
+        <path d="M13 3v1.5h.25a1.25 1.25 0 0 1 1.25 1.25v3.5c0 .345.28.625.625.625h2.375a.75.75 0 0 1 0 1.5h-2.375a.625.625 0 0 0-.625.625v3.5a1.25 1.25 0 0 1-1.25 1.25H13v1.5h.75a2.25 2.25 0 0 0 2.25-2.25V5.25a2.25 2.25 0 0 0-2.25-2.25H13Z"/>
+        {% endif %}
+    </svg>
+</a>
+{% endfor %}
+{% endmacro %}

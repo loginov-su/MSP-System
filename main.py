@@ -1,12 +1,8 @@
 import requests
 import config
-from flask_login import login_required, login_manager, current_user
-from flask import Flask, render_template
-from sqlalchemy import create_engine, text, MetaData, Table, Column, Integer, String
-from openpyxl import Workbook
-from io import BytesIO
-from datetime import timedelta, datetime
-from flask_bcrypt import Bcrypt
+from flask import Flask, render_template, jsonify, request
+from datetime import timedelta
+from db import init_db
 
 
 
@@ -39,6 +35,58 @@ def exit_history():
     return render_template("not_dostup.html")
 
 
+@app.route("/guard")
+def guard_stub():
+    return render_template("not_dostup.html")
+
+
+@app.route("/guest")
+def guest_stub():
+    return render_template("not_dostup.html")
+
+
+# Сервисы (пока заглушки)
+@app.route("/news")
+def news_stub():
+    return render_template("not_dostup.html")
+
+
+@app.route("/events")
+def events_stub():
+    return render_template("not_dostup.html")
+
+
+@app.route("/schedule")
+def schedule_stub():
+    return render_template("not_dostup.html")
+
+
+@app.route("/campus-map")
+def campus_map_stub():
+    return render_template("not_dostup.html")
+
+
+@app.route("/smartstop")
+def smartstop_stub():
+    return render_template("not_dostup.html")
+
+
+@app.route("/profile")
+def profile_stub():
+    return render_template("not_dostup.html")
+
+
+@app.route("/api/exit/my_application", methods=["POST"])
+def test_create_application_api():
+    data = request.get_json(silent=True) or {}
+    required = ['fio', 'group_number', 'group_letter', 'cause', 'time']
+    missing = [f for f in required if not data.get(f)]
+    if missing:
+        return jsonify({'status': 'error',
+                        'message': 'Отсутствуют обязательные поля: ' + ", ".join(missing)}), 400
+    return jsonify({'status': 'success', 'application_id': 1, 'code': '123456'}), 200
+
+
 # Регистрация маршрутов из API-модулей
 import sys
 # Модуль API делает "from main import app". При запуске "python main.py"
@@ -46,6 +94,11 @@ import sys
 # ссылался на тот же экземпляр приложения.
 sys.modules['main'] = sys.modules['__main__']
 from api import teacher  # noqa: E402
+from api import auth  # noqa: E402
+
+
+# Инициализация базы данных (создание таблиц)
+init_db()
 
 
 

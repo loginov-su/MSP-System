@@ -2,272 +2,432 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Регистрация — МШП</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f4f4f5;
-            --card: #ffffff;
-            --text: #27272a;
-            --muted: #71717a;
-            --border: #e4e4e7;
-            --accent: #3f3f46;
-            --accent-hover: #27272a;
-            --danger-bg: #fef2f2;
-            --danger-border: #fecaca;
-            --danger: #b91c1c;
-            --success-bg: #f0fdf4;
-            --success-border: #bbf7d0;
-            --success: #15803d;
+            --primary: #4A75FF;
+            --primary-2: #6C5CFF;
+            --primary-dark: #2E3FB0;
+            --primary-glow: rgba(74,117,255,.32);
+            --primary-light: rgba(74,117,255,.12);
+            --bg: #0e1020;
+            --surface: rgba(255,255,255,.07);
+            --surface2: rgba(255,255,255,.05);
+            --surface-hover: rgba(255,255,255,.12);
+            --border: rgba(255,255,255,.11);
+            --text: #f2f4ff;
+            --muted: rgba(242,244,255,.55);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
+            font-family: "Inter", sans-serif;
+            min-height: 100vh;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 24px 16px;
         }
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 15% 5%, rgba(74,117,255,.30) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 50% at 85% 90%, rgba(108,92,255,.25) 0%, transparent 55%);
+            animation: cloudA 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: 0;
+            background: radial-gradient(ellipse 55% 45% at 60% 40%, rgba(74,117,255,.14) 0%, transparent 55%);
+            animation: cloudB 26s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes cloudA { 0%,100% { transform: translate(0,0) scale(1);} 33% { transform: translate(3%,4%) scale(1.04);} 66% { transform: translate(-2%,2%) scale(.97);} }
+        @keyframes cloudB { 0%,100% { transform: translate(0,0) scale(1);} 40% { transform: translate(-4%,3%) scale(1.06);} 70% { transform: translate(3%,-2%) scale(.95);} }
+
+        .shell { position: relative; z-index: 1; width: 100%; max-width: 460px; }
+
+        .brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; animation: fadeUp .35s ease both; }
+        .brand-badge {
+            width: 48px; height: 48px; border-radius: 16px; flex-shrink: 0;
+            background: linear-gradient(135deg, #4A75FF, #6C5CFF);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 24px; font-weight: 900;
+            box-shadow: 0 4px 16px var(--primary-glow);
+        }
+        .brand-name { font-size: 24px; font-weight: 900; letter-spacing: -.5px; }
 
         .card {
-            background: var(--card);
+            background: var(--surface);
+            backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 440px;
-            padding: 32px;
+            border-radius: 26px;
+            padding: 28px 24px;
+            animation: fadeUp .35s .07s ease both;
         }
+        .card-title { font-size: 20px; font-weight: 900; letter-spacing: -.3px; text-align: center; }
+        .card-sub { font-size: 13px; color: var(--muted); margin-top: 5px; font-weight: 500; text-align: center; }
 
-        .card__title {
-            font-size: 22px;
-            font-weight: 700;
-        }
+        /* Segmented roles */
+        .segmented { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; padding: 4px; border-radius: 16px; background: var(--surface2); border: 1px solid var(--border); margin: 18px 0; }
+        .segment { border: 0; border-radius: 12px; padding: 10px 6px; background: transparent; color: var(--muted); cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700; transition: background .2s,color .2s; line-height: 1.1; }
+        .segment.active { background: var(--surface-hover); color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,.2); }
 
-        .card__subtitle {
-            color: var(--muted);
-            font-size: 14px;
-            margin-top: 4px;
-            margin-bottom: 24px;
-        }
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
+        .fgroup { display: grid; gap: 6px; margin-bottom: 14px; }
+        .flabel { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
         .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+            width: 100%; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 14px;
+            padding: 13px 15px; font-size: 15px; font-weight: 600; font-family: inherit; color: var(--text);
+            outline: none; transition: border-color .2s, box-shadow .2s;
         }
+        .field:focus { border-color: rgba(74,117,255,.6); box-shadow: 0 0 0 3px var(--primary-glow); }
+        .field::placeholder { color: var(--muted); font-weight: 500; }
+        .field:-webkit-autofill, .field:-webkit-autofill:hover, .field:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 100px #14162b inset; -webkit-text-fill-color: var(--text); caret-color: var(--text); }
+        .field.error { border-color: rgba(239,68,68,.6); }
+        .field-wrap { position: relative; }
+        .field-pw { padding-right: 80px; }
+        .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: var(--muted); padding: 6px 8px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; font-family: inherit; transition: color .2s; }
+        .pw-toggle:hover { color: var(--text); }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        .field label {
-            font-size: 14px;
-            font-weight: 500;
-        }
+        .field-error { display: none; color: #f87171; font-size: 12px; font-weight: 600; margin-top: 4px; }
+        .field-error.show { display: block; }
+        .note { font-size: 11px; color: var(--muted); margin-top: 5px; font-style: italic; }
 
-        .field input,
-        .field select {
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            color: var(--text);
-            background: var(--card);
-            outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        .btn-primary {
+            width: 100%; background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff;
+            border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 800; font-family: inherit;
+            cursor: pointer; box-shadow: 0 4px 18px var(--primary-glow); transition: opacity .2s, transform .2s; margin-top: 4px;
         }
+        .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+        .btn-primary:active { transform: scale(.98); }
+        .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 
-        .field input:focus,
-        .field select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.12);
-        }
+        .card-footer { margin-top: 18px; text-align: center; font-size: 13px; color: var(--muted); }
+        .card-footer a { color: var(--primary-2); text-decoration: none; font-weight: 700; }
+        .card-footer a:hover { opacity: .8; }
 
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+        /* Шаги */
+        .step-form { display: none; }
+        .step-form.unlocked { display: block; animation: fadeUp .4s ease-out; }
 
-        .btn {
-            margin-top: 8px;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            background: var(--accent);
-            color: #fff;
-            transition: background 0.15s ease;
-        }
+        .error-box { display: none; padding: 11px 14px; border-radius: 12px; border: 1px solid rgba(239,68,68,.25); background: rgba(239,68,68,.10); color: #f87171; font-size: 13px; font-weight: 600; line-height: 1.45; margin-top: 14px; }
+        .error-box.show { display: block; }
 
-        .btn:hover {
-            background: var(--accent-hover);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .msg {
-            margin-top: 16px;
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .msg--success {
-            display: block;
-            background: var(--success-bg);
-            border: 1px solid var(--success-border);
-            color: var(--success);
-        }
-
-        .msg--error {
-            display: block;
-            background: var(--danger-bg);
-            border: 1px solid var(--danger-border);
-            color: var(--danger);
-        }
-
-        .login-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .login-link a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-        }
+        .loading { display: none; text-align: center; margin-top: 16px; }
+        .loading.show { display: block; }
+        .spinner { border: 3px solid var(--surface2); border-top: 3px solid var(--primary); border-radius: 50%; width: 26px; height: 26px; animation: spin 1s linear infinite; margin: 0 auto 8px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1 class="card__title">Регистрация</h1>
-        <p class="card__subtitle">Создание аккаунта в системе</p>
-
-        <form class="form" id="reg-form">
-            <div class="field">
-                <label for="surname">Фамилия</label>
-                <input id="surname" name="surname" type="text" placeholder="Иванов" required>
-            </div>
-            <div class="field">
-                <label for="name">Имя</label>
-                <input id="name" name="name" type="text" placeholder="Иван" required>
-            </div>
-            <div class="field">
-                <label for="lastname">Отчество</label>
-                <input id="lastname" name="lastname" type="text" placeholder="Иванович">
-            </div>
-
-            <div class="field">
-                <label for="role">Роль</label>
-                <select id="role" name="role">
-                    <option value="student">Ученик</option>
-                    <option value="teacher">Преподаватель</option>
-                    <option value="guard">Охрана</option>
-                </select>
-            </div>
-
-            <div class="row" id="group-row" style="display:none;">
-                <div class="field">
-                    <label for="group_number">Номер группы</label>
-                    <input id="group_number" name="group_number" type="number" min="1" placeholder="5">
-                </div>
-                <div class="field">
-                    <label for="group_letter">Буква</label>
-                    <input id="group_letter" name="group_letter" type="text" maxlength="1" placeholder="А">
-                </div>
-            </div>
-
-            <div class="field">
-                <label for="login">Логин</label>
-                <input id="login" name="login" type="text" placeholder="ivanov" required>
-            </div>
-            <div class="field">
-                <label for="password">Пароль</label>
-                <input id="password" name="password" type="password" placeholder="••••••••" minlength="6" required>
-            </div>
-
-            <button type="submit" class="btn" id="submit-btn">Зарегистрироваться</button>
-        </form>
-
-        <div class="msg" id="msg"></div>
-
-        <span class="login-link">Уже есть аккаунт? <a href="/">Войти</a></span>
+<div class="shell">
+    <div class="brand">
+        <div class="brand-badge">М</div>
+        <span class="brand-name">МШП</span>
     </div>
 
-    <script>
-        const role = document.getElementById('role');
-        const groupRow = document.getElementById('group-row');
-        const form = document.getElementById('reg-form');
-        const msg = document.getElementById('msg');
-        const btn = document.getElementById('submit-btn');
+    <div class="card">
+        <div class="card-title">Регистрация</div>
+        <div class="card-sub">Создайте аккаунт для входа в портал</div>
 
-        role.addEventListener('change', () => {
-            groupRow.style.display = role.value === 'student' ? 'grid' : 'none';
+        <!-- Шаг 1: код приглашения (для учителя/охраны) -->
+        <div class="step-code" id="stepCode">
+            <div class="segmented" role="tablist">
+                <button class="segment active" type="button" data-role="student">Ученик</button>
+                <button class="segment" type="button" data-role="teacher">Учитель</button>
+                <button class="segment" type="button" data-role="guard">Охрана</button>
+            </div>
+            <div class="fgroup" id="inviteGroup" style="display:none;">
+                <span class="flabel">Код приглашения</span>
+                <div class="field-wrap">
+                    <input class="field code-input" id="inviteCode" name="invite_code" placeholder="Введите код" autocomplete="off" maxlength="20" style="text-transform:uppercase;">
+                </div>
+                <div class="field-error" id="inviteError"></div>
+            </div>
+            <button type="button" class="btn-primary" id="btnContinue">Продолжить</button>
+            <div class="error-box" id="codeError"></div>
+        </div>
+
+        <!-- Шаг 2: форма -->
+        <div class="step-form" id="stepForm">
+            <form id="regForm" novalidate>
+                <div class="row-2">
+                    <div class="fgroup">
+                        <label class="flabel" for="surname">Фамилия</label>
+                        <input class="field" id="surname" name="surname" required>
+                        <div class="field-error" id="surnameError"></div>
+                    </div>
+                    <div class="fgroup">
+                        <label class="flabel" for="name">Имя</label>
+                        <input class="field" id="name" name="name" required>
+                        <div class="field-error" id="nameError"></div>
+                    </div>
+                </div>
+
+                <div class="fgroup">
+                    <label class="flabel" for="lastname">Отчество</label>
+                    <input class="field" id="lastname" name="lastname">
+                    <div class="field-error" id="lastnameError"></div>
+                </div>
+
+                <div class="fgroup">
+                    <label class="flabel" for="phone">Телефон (необязательно)</label>
+                    <input class="field" id="phone" name="phone" type="tel" placeholder="7XXXXXXXXXX" inputmode="numeric">
+                    <div class="field-error" id="phoneError"></div>
+                </div>
+
+                <div class="fgroup">
+                    <label class="flabel" for="login">Email (логин)</label>
+                    <input class="field" id="login" name="login" type="email" inputmode="email" autocomplete="username" required>
+                    <div class="field-error" id="loginError"></div>
+                </div>
+
+                <div id="groupRow" style="display:none;">
+                    <div class="row-2">
+                        <div class="fgroup">
+                            <label class="flabel" for="group_number">Номер группы</label>
+                            <input class="field" id="group_number" name="group_number" type="number" min="1" placeholder="5">
+                            <div class="field-error" id="group_numberError"></div>
+                        </div>
+                        <div class="fgroup">
+                            <label class="flabel" for="group_letter">Буква</label>
+                            <input class="field" id="group_letter" name="group_letter" maxlength="1" placeholder="А" style="text-transform:uppercase;">
+                            <div class="field-error" id="group_letterError"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fgroup">
+                    <label class="flabel" for="password">Пароль</label>
+                    <div class="field-wrap">
+                        <input class="field field-pw" id="password" name="password" type="password" autocomplete="new-password">
+                        <button class="pw-toggle" type="button" data-target="password">Показать</button>
+                    </div>
+                    <div class="note">Минимум 8 символов, заглавные и строчные буквы, цифры.</div>
+                    <div class="field-error" id="passwordError"></div>
+                </div>
+
+                <div class="fgroup">
+                    <label class="flabel" for="passwordConfirm">Подтверждение пароля</label>
+                    <div class="field-wrap">
+                        <input class="field field-pw" id="passwordConfirm" name="passwordConfirm" type="password" autocomplete="new-password">
+                        <button class="pw-toggle" type="button" data-target="passwordConfirm">Показать</button>
+                    </div>
+                    <div class="field-error" id="passwordConfirmError"></div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">Зарегистрироваться</button>
+                <div class="error-box" id="formError"></div>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Регистрация...</p>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-footer">
+            Уже есть аккаунт?
+            <a href="/">Войти</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const roleBtns = document.querySelectorAll('[data-role]');
+    const stepCode = document.getElementById('stepCode');
+    const stepForm = document.getElementById('stepForm');
+    const inviteGroup = document.getElementById('inviteGroup');
+    const inviteCode = document.getElementById('inviteCode');
+    const inviteError = document.getElementById('inviteError');
+    const codeError = document.getElementById('codeError');
+    const btnContinue = document.getElementById('btnContinue');
+    let selectedRole = 'student';
+
+    roleBtns.forEach(btn => btn.addEventListener('click', () => {
+        selectedRole = btn.dataset.role;
+        roleBtns.forEach(b => {
+            const active = b === btn;
+            b.classList.toggle('active', active);
         });
+        inviteGroup.style.display = (selectedRole === 'student') ? 'none' : 'block';
+        document.getElementById('groupRow').style.display = (selectedRole === 'student') ? 'block' : 'none';
+    }));
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            btn.disabled = true;
-            msg.className = 'msg';
+    // Показ/скрытие пароля
+    document.querySelectorAll('.pw-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const inp = document.getElementById(btn.dataset.target);
+            const next = inp.type === 'password' ? 'text' : 'password';
+            inp.type = next;
+            btn.textContent = next === 'password' ? 'Показать' : 'Скрыть';
+        });
+    });
 
-            const payload = {
-                surname: form.surname.value.trim(),
-                name: form.name.value.trim(),
-                lastname: form.lastname.value.trim(),
-                role: form.role.value,
-                group_number: form.group_number.value || null,
-                group_letter: form.group_letter.value.trim().toUpperCase() || null,
-                login: form.login.value.trim(),
-                password: form.password.value,
-            };
+    inviteCode.addEventListener('input', () => {
+        inviteCode.classList.remove('error');
+        inviteError.classList.remove('show');
+        codeError.classList.remove('show');
+    });
 
-            try {
-                const res = await fetch('/api/teacher/create_account', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                });
-                const data = await res.json();
+    btnContinue.addEventListener('click', async () => {
+        codeError.classList.remove('show');
+        inviteError.classList.remove('show');
+        inviteCode.classList.remove('error');
 
-                if (res.ok && data.status === 'success') {
-                    msg.className = 'msg msg--success';
-                    msg.textContent = data.message || 'Аккаунт создан';
-                    setTimeout(() => window.location.href = '/', 1200);
-                } else {
-                    msg.className = 'msg msg--error';
-                    msg.textContent = data.message || 'Ошибка регистрации';
-                }
-            } catch (err) {
-                msg.className = 'msg msg--error';
-                msg.textContent = 'Нет соединения с сервером';
-            } finally {
-                btn.disabled = false;
+        if (selectedRole === 'student') {
+            stepCode.style.display = 'none';
+            stepForm.classList.add('unlocked');
+            return;
+        }
+
+        const code = inviteCode.value.trim();
+        if (!code) {
+            inviteError.textContent = 'Введите код приглашения';
+            inviteError.classList.add('show');
+            inviteCode.classList.add('error');
+            return;
+        }
+
+        btnContinue.disabled = true;
+        try {
+            const res = await fetch('/api/teacher/validate_invite_code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.valid) {
+                stepCode.style.display = 'none';
+                stepForm.classList.add('unlocked');
+            } else {
+                codeError.textContent = data.message || 'Неверный код приглашения';
+                codeError.classList.add('show');
+            }
+        } catch {
+            codeError.textContent = 'Ошибка соединения';
+            codeError.classList.add('show');
+        } finally {
+            btnContinue.disabled = false;
+        }
+    });
+
+    function showError(id, msg) {
+        const f = document.getElementById(id);
+        const e = document.getElementById(id + 'Error');
+        f.classList.add('error');
+        if (e) { e.textContent = msg; e.classList.add('show'); }
+    }
+    function hideError(id) {
+        const f = document.getElementById(id);
+        const e = document.getElementById(id + 'Error');
+        f.classList.remove('error');
+        if (e) e.classList.remove('show');
+    }
+    function validatePassword(pw) {
+        return pw.length >= 8 && /[a-zA-Zа-яА-ЯЁё]/.test(pw) && /[A-ZА-ЯЁ]/.test(pw) && /\d/.test(pw);
+    }
+
+    const form = document.getElementById('regForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loading = document.getElementById('loading');
+    const formError = document.getElementById('formError');
+
+    document.getElementById('phone').addEventListener('input', e => {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 11) v = v.substring(0, 11);
+        e.target.value = v;
+        hideError('phone');
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        formError.classList.remove('show');
+        ['surname','name','lastname','phone','login','password','passwordConfirm','group_number','group_letter'].forEach(hideError);
+
+        let isValid = true;
+        ['surname','name','login','password','passwordConfirm'].forEach(id => {
+            if (!document.getElementById(id).value.trim()) {
+                showError(id, 'Это поле обязательно');
+                isValid = false;
             }
         });
-    </script>
+
+        const phone = document.getElementById('phone').value;
+        if (phone && !(/^7\d{10}$/.test(phone))) {
+            showError('phone', 'Номер: 7 + 10 цифр');
+            isValid = false;
+        }
+        const pw = document.getElementById('password').value;
+        if (pw && !validatePassword(pw)) {
+            showError('password', 'Минимум 8 символов, заглавные и строчные буквы, цифры');
+            isValid = false;
+        }
+        if (pw && document.getElementById('passwordConfirm').value !== pw) {
+            showError('passwordConfirm', 'Пароли не совпадают');
+            isValid = false;
+        }
+
+        const gn = document.getElementById('group_number').value;
+        const gl = document.getElementById('group_letter').value;
+        if (selectedRole === 'student' && (!!gn !== !!gl)) {
+            showError('group_number', 'Укажите и номер, и букву');
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
+        submitBtn.disabled = true;
+        loading.classList.add('show');
+
+        const payload = {
+            role: selectedRole,
+            surname: document.getElementById('surname').value.trim(),
+            name: document.getElementById('name').value.trim(),
+            lastname: document.getElementById('lastname').value.trim(),
+            phone,
+            login: document.getElementById('login').value.trim(),
+            password: pw,
+            group_number: gn || null,
+            group_letter: (gl || '').trim().toUpperCase() || null,
+            invite_code: selectedRole === 'student' ? null : inviteCode.value.trim(),
+        };
+
+        try {
+            const res = await fetch('/api/teacher/create_account', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                formError.className = 'error-box show';
+                formError.style.border = '1px solid rgba(34,197,94,.3)';
+                formError.style.background = 'rgba(34,197,94,.12)';
+                formError.style.color = '#4ade80';
+                formError.textContent = data.message || 'Аккаунт создан';
+                setTimeout(() => window.location.href = '/', 1500);
+            } else {
+                formError.textContent = data.message || 'Ошибка регистрации';
+                formError.classList.add('show');
+            }
+        } catch {
+            formError.textContent = 'Нет соединения с сервером';
+            formError.classList.add('show');
+        } finally {
+            submitBtn.disabled = false;
+            loading.classList.remove('show');
+        }
+    });
+</script>
 </body>
 </html>

@@ -2,200 +2,223 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Вход — МШП</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f4f4f5;
-            --card: #ffffff;
-            --text: #27272a;
-            --muted: #71717a;
-            --border: #e4e4e7;
-            --accent: #3f3f46;
-            --accent-hover: #27272a;
-            --danger-bg: #fef2f2;
-            --danger-border: #fecaca;
-            --danger: #b91c1c;
+            --primary: #4A75FF;
+            --primary-2: #6C5CFF;
+            --primary-dark: #2E3FB0;
+            --primary-glow: rgba(74,117,255,.32);
+            --bg: #0e1020;
+            --surface: rgba(255,255,255,.07);
+            --surface2: rgba(255,255,255,.05);
+            --surface-hover: rgba(255,255,255,.12);
+            --border: rgba(255,255,255,.11);
+            --text: #f2f4ff;
+            --muted: rgba(242,244,255,.55);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
+            font-family: "Inter", sans-serif;
+            min-height: 100vh;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 24px 16px;
         }
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 15% 5%, rgba(74,117,255,.30) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 50% at 85% 90%, rgba(108,92,255,.25) 0%, transparent 55%);
+            animation: cloudA 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: 0;
+            background: radial-gradient(ellipse 55% 45% at 60% 40%, rgba(74,117,255,.14) 0%, transparent 55%);
+            animation: cloudB 26s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes cloudA { 0%,100% { transform: translate(0,0) scale(1);} 33% { transform: translate(3%,4%) scale(1.04);} 66% { transform: translate(-2%,2%) scale(.97);} }
+        @keyframes cloudB { 0%,100% { transform: translate(0,0) scale(1);} 40% { transform: translate(-4%,3%) scale(1.06);} 70% { transform: translate(3%,-2%) scale(.95);} }
+
+        .shell { position: relative; z-index: 1; width: 100%; max-width: 400px; }
+
+        .brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 28px; animation: fadeUp .35s ease both; }
+        .brand-badge {
+            width: 48px; height: 48px; border-radius: 16px; flex-shrink: 0;
+            background: linear-gradient(135deg, #4A75FF, #6C5CFF);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 24px; font-weight: 900;
+            box-shadow: 0 4px 16px var(--primary-glow);
+        }
+        .brand-name { font-size: 26px; font-weight: 900; letter-spacing: -.5px; }
 
         .card {
-            background: var(--card);
+            background: var(--surface);
+            backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 400px;
-            padding: 32px;
+            border-radius: 26px;
+            padding: 28px 24px;
+            animation: fadeUp .35s .07s ease both;
         }
+        .card-title { font-size: 22px; font-weight: 900; letter-spacing: -.3px; }
+        .card-sub { font-size: 14px; color: var(--muted); margin-top: 5px; font-weight: 500; }
 
-        .brand {
-            text-align: center;
-            margin-bottom: 24px;
-        }
+        .form { display: grid; gap: 14px; margin-top: 20px; }
 
-        .brand__logo {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: var(--accent);
-            color: #fff;
-            font-size: 24px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 12px;
-        }
+        .segmented { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; padding: 4px; border-radius: 16px; background: var(--surface2); border: 1px solid var(--border); }
+        .segment { border: 0; border-radius: 12px; padding: 10px; background: transparent; color: var(--muted); cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700; transition: background .2s,color .2s; line-height: 1; }
+        .segment.active { background: var(--surface-hover); color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,.2); }
 
-        .brand__title {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .brand__subtitle {
-            color: var(--muted);
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
+        .fgroup { display: grid; gap: 6px; }
+        .flabel { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+        .field-wrap { position: relative; }
         .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+            width: 100%; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 14px;
+            padding: 13px 15px; font-size: 15px; font-weight: 600; font-family: inherit; color: var(--text);
+            outline: none; transition: border-color .2s, box-shadow .2s;
         }
+        .field:focus { border-color: rgba(74,117,255,.6); box-shadow: 0 0 0 3px var(--primary-glow); }
+        .field::placeholder { color: var(--muted); font-weight: 500; }
+        .field:-webkit-autofill, .field:-webkit-autofill:hover, .field:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 100px #14162b inset; -webkit-text-fill-color: var(--text); caret-color: var(--text); border-color: var(--border); }
+        .field-pw { padding-right: 80px; }
+        .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: var(--muted); padding: 6px 8px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; font-family: inherit; transition: color .2s; }
+        .pw-toggle:hover { color: var(--text); }
 
-        .field label {
-            font-size: 14px;
-            font-weight: 500;
+        .btn-primary {
+            width: 100%; background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff;
+            border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 800; font-family: inherit;
+            cursor: pointer; box-shadow: 0 4px 18px var(--primary-glow); transition: opacity .2s, transform .2s; margin-top: 2px;
         }
+        .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+        .btn-primary:active { transform: scale(.98); }
 
-        .field input,
-        .field select {
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            color: var(--text);
-            background: var(--card);
-            outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
+        .error { display: none; padding: 11px 14px; border-radius: 12px; border: 1px solid rgba(239,68,68,.25); background: rgba(239,68,68,.10); color: #f87171; font-size: 13px; font-weight: 600; line-height: 1.45; }
+        .error.show { display: block; }
 
-        .field input:focus,
-        .field select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.12);
-        }
+        .card-footer { margin-top: 18px; text-align: center; font-size: 13px; color: var(--muted); }
+        .card-footer a { color: var(--primary-2); text-decoration: none; font-weight: 700; }
+        .card-footer a:hover { opacity: .8; }
+        .card-footer .sep { margin: 0 6px; opacity: .4; }
 
-        .btn {
-            margin-top: 8px;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            background: var(--accent);
-            color: #fff;
-            transition: background 0.15s ease;
-        }
-
-        .btn:hover {
-            background: var(--accent-hover);
-        }
-
-        .error {
-            margin-top: 16px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            background: var(--danger-bg);
-            border: 1px solid var(--danger-border);
-            color: var(--danger);
-            font-size: 14px;
-            display: none;
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="brand">
-            <div class="brand__logo">М</div>
-            <div class="brand__title">МШП</div>
-            <div class="brand__subtitle">Портал цифровых разрешений</div>
-        </div>
-
-        <form class="form" id="login-form">
-            <div class="field">
-                <label for="login">Логин</label>
-                <input id="login" name="login" type="text" placeholder="ivanov" autocomplete="username" required>
-            </div>
-
-            <div class="field">
-                <label for="password">Пароль</label>
-                <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
-            </div>
-
-            <div class="field">
-                <label for="role">Роль</label>
-                <select id="role" name="role">
-                    <option value="student">Ученик</option>
-                    <option value="teacher">Преподаватель</option>
-                    <option value="guard">Охрана</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn">Войти</button>
-        </form>
-
-        <div class="error" id="error"></div>
+<div class="shell">
+    <div class="brand">
+        <div class="brand-badge">М</div>
+        <span class="brand-name">МШП</span>
     </div>
 
-    <script>
-        const form = document.getElementById('login-form');
-        const errorBox = document.getElementById('error');
+    <div class="card">
+        <div class="card-title">Вход в портал</div>
+        <div class="card-sub">Введите данные своего аккаунта</div>
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            errorBox.style.display = 'none';
+        <form class="form" id="loginForm" novalidate>
+            <div class="fgroup">
+                <span class="flabel">Кто входит?</span>
+                <div class="segmented" role="tablist">
+                    <button class="segment" type="button" role="tab" aria-selected="false" data-role="student">Ученик</button>
+                    <button class="segment active" type="button" role="tab" aria-selected="true" data-role="teacher">Учитель</button>
+                    <button class="segment" type="button" role="tab" aria-selected="false" data-role="guard">Охрана</button>
+                </div>
+            </div>
 
-            const login = form.login.value.trim();
-            const password = form.password.value;
+            <div class="fgroup">
+                <label class="flabel" for="login">Email</label>
+                <input class="field" id="login" name="login" type="email" inputmode="email" autocomplete="username" placeholder="name@school.ru" required>
+            </div>
 
-            if (!login || !password) {
-                errorBox.textContent = 'Заполните логин и пароль';
-                errorBox.style.display = 'block';
+            <div class="fgroup">
+                <label class="flabel" for="password">Пароль</label>
+                <div class="field-wrap">
+                    <input class="field field-pw" id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+                    <button class="pw-toggle" type="button" id="togglePassword">Показать</button>
+                </div>
+            </div>
+
+            <button class="btn-primary" type="submit">Войти</button>
+            <div class="error" id="formError" role="alert" aria-live="polite"></div>
+        </form>
+
+        <div class="card-footer">
+            Нет аккаунта?
+            <a href="/create_accounts/new">Зарегистрироваться</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const form = document.getElementById('loginForm');
+    const errorBox = document.getElementById('formError');
+    const roleButtons = document.querySelectorAll('[data-role]');
+    let selectedRole = 'teacher';
+
+    roleButtons.forEach(btn => btn.addEventListener('click', () => {
+        selectedRole = btn.dataset.role;
+        roleButtons.forEach(b => {
+            const active = b === btn;
+            b.classList.toggle('active', active);
+            b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+    }));
+
+    toggleBtn?.addEventListener('click', () => {
+        const next = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = next;
+        toggleBtn.textContent = next === 'password' ? 'Показать' : 'Скрыть';
+    });
+
+    function showError(msg) {
+        errorBox.textContent = msg;
+        errorBox.classList.add('show');
+    }
+    function clearError() { errorBox.textContent = ''; errorBox.classList.remove('show'); }
+
+    form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const login = document.getElementById('login').value.trim();
+        const pwd = passwordInput.value;
+        if (!login) { showError('Введите email.'); return; }
+        if (!pwd) { showError('Введите пароль.'); return; }
+        clearError();
+        try {
+            const res = await fetch('/api/portal/establish-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: login, password: pwd, role: selectedRole }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (data.ok) {
+                localStorage.setItem('msp.display_name', data.display_name);
+                localStorage.setItem('msp.role', data.role);
+                window.location.href = data.redirect || '/home';
                 return;
             }
-
-            // TODO: заменить на реальную аутентификацию
-            console.log('login:', login, 'role:', form.role.value);
-            window.location.href = '/home';
-        });
-    </script>
+            const errors = {
+                invalid_email:     'Введите email в формате name@example.com.',
+                invalid_password:  'Неверный email или пароль.',
+                awaiting_approval: 'Аккаунт ещё на проверке. Дождитесь одобрения администратором.',
+            };
+            showError(errors[data.error] || (res.status >= 500 ? 'Ошибка сервера. Попробуйте позже.' : 'Не удалось войти. Попробуйте ещё раз.'));
+        } catch {
+            showError('Нет соединения. Проверьте сеть.');
+        }
+    });
+</script>
 </body>
 </html>
