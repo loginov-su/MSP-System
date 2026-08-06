@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Охрана — заявки на выход</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --card: #ffffff;
+      --text: #27272a;
+      --muted: #71717a;
+      --border: #e4e4e7;
+      --accent: #3f3f46;
+      --accent-hover: #27272a;
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --success: #15803d;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .header .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .filter {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .chip:hover {
+      background: #fafafa;
+    }
+
+    .chip--active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .item__info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .item__name {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .item__meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .item__code {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn--approve {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success);
+    }
+
+    .btn--deny {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      color: var(--danger);
+    }
+
+    .btn--approve:hover,
+    .btn--deny:hover {
+      opacity: 0.75;
+    }
+
+    .empty {
+      background: var(--card);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .verify {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .verify input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      letter-spacing: 0.15em;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .verify input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.12);
+    }
+
+    .verify .btn--primary {
+      background: var(--accent);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Охрана — контроль выхода</h1>
+        <p class="subtitle">Заявки студентов на выход из общежития</p>
+      </div>
+      <span class="chip">Корпус: {{ campus if campus else 'Mytishchi' }}</span>
+    </div>
+
+    <div class="verify">
+      <input id="code-input" type="text" placeholder="Введите код студента" maxlength="6">
+      <button class="btn btn--primary" id="verify-btn">Проверить</button>
+    </div>
+
+    <div class="filter">
+      <button class="chip chip--active" data-filter="all">Все</button>
+      <button class="chip" data-filter="pending">Ожидают</button>
+      <button class="chip" data-filter="approved">Выпущены</button>
+    </div>
+
+    <div class="list" id="list">
+      <div class="item">
+        <div class="item__info">
+          <span class="item__name">Иванов Иван Иванович</span>
+          <span class="item__meta">5А · По состоянию здоровья · 14:00</span>
+        </div>
+        <span class="item__code">123456</span>
+        <div class="actions">
+          <button class="btn btn--approve">Выпустить</button>
+          <button class="btn btn--deny">Отказать</button>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item__info">
+          <span class="item__name">Петрова Анна Сергеевна</span>
+          <span class="item__meta">6Б · По семейным обстоятельствам · 15:30</span>
+        </div>
+        <span class="item__code">654321</span>
+        <div class="actions">
+          <button class="btn btn--approve">Выпустить</button>
+          <button class="btn btn--deny">Отказать</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chips = document.querySelectorAll('.chip[data-filter]');
+    const items = document.querySelectorAll('.item');
+    const codeInput = document.getElementById('code-input');
+    const verifyBtn = document.getElementById('verify-btn');
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('chip--active'));
+        chip.classList.add('chip--active');
+        const f = chip.dataset.filter;
+        items.forEach(item => {
+          item.style.display = (f === 'all') ? 'flex' : 'none';
+        });
+      });
+    });
+
+    items.forEach(item => {
+      const name = item.querySelector('.item__name').textContent;
+      const approve = item.querySelector('.btn--approve');
+      const deny = item.querySelector('.btn--deny');
+      approve.addEventListener('click', () => {
+        item.style.opacity = '0.6';
+        item.querySelector('.item__meta').textContent = name + ' · Выпущен';
+      });
+      deny.addEventListener('click', () => {
+        item.style.opacity = '0.6';
+        item.querySelector('.item__meta').textContent = name + ' · Отказано';
+      });
+    });
+
+    verifyBtn.addEventListener('click', () => {
+      const code = codeInput.value.trim();
+      let found = false;
+      items.forEach(item => {
+        if (item.querySelector('.item__code').textContent === code) {
+          item.style.boxShadow = '0 0 0 2px var(--success)';
+          found = true;
+        }
+      });
+      if (!found && code) {
+        alert('Код не найден среди активных заявок');
+      }
+      codeInput.value = '';
+    });
+  </script>
+</body>
+</html>

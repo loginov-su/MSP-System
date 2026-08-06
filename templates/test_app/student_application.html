@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заявка на выход — просмотр</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --card: #ffffff;
+      --text: #27272a;
+      --muted: #71717a;
+      --border: #e4e4e7;
+      --accent: #3f3f46;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+      --success-text: #15803d;
+      --pending-bg: #fefce8;
+      --pending-border: #fef08a;
+      --pending-text: #a16207;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 560px;
+      padding: 32px;
+    }
+
+    .card__title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card__subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .badge--pending {
+      background: var(--pending-bg);
+      border: 1px solid var(--pending-border);
+      color: var(--pending-text);
+    }
+
+    .badge--approved {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+    }
+
+    .meta {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .meta li {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+
+    .meta li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .meta .label {
+      color: var(--muted);
+    }
+
+    .meta .value {
+      font-weight: 500;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .pass {
+      margin-top: 24px;
+      padding: 18px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .pass__code {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin: 6px 0;
+    }
+
+    .pass__hint {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 24px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card);
+      transition: background 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <h1 class="card__title">Заявка на выход</h1>
+      <span class="badge badge--approved">Создана</span>
+    </div>
+    <p class="card__subtitle">Заявка №{{ application.id if application else '—' }}</p>
+
+    <ul class="meta">
+      <li><span class="label">ФИО</span><span class="value">{{ application.student_name if application else 'Иванов Иван Иванович' }}</span></li>
+      <li><span class="label">Группа</span><span class="value">{{ application.group if application else '5А' }}</span></li>
+      <li><span class="label">Причина</span><span class="value">{{ application.cause if application else 'По состоянию здоровья' }}</span></li>
+      <li><span class="label">Время выхода</span><span class="value">{{ application.allowed_exit_time if application else '—' }}</span></li>
+      <li><span class="label">Корпус</span><span class="value">{{ application.campus if application else 'Mytishchi' }}</span></li>
+    </ul>
+
+    <div class="pass">
+      <span class="pass__hint">Код для прохода</span>
+      <div class="pass__code">{{ code if code else '123456' }}</div>
+      <span class="pass__hint">Предъявите код охраннику</span>
+    </div>
+
+    <a class="btn" href="/create_exit">← Новая заявка</a>
+  </div>
+</body>
+</html>
