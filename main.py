@@ -49,6 +49,20 @@ def test_student_application():
                            application=application, code='123456')
 
 
+@app.route("/exit/application/<int:application_id>")
+def test_application_page(application_id):
+    application = {
+        'id': application_id,
+        'student_name': 'Иванов Иван Иванович',
+        'group': '5А',
+        'cause': 'По состоянию здоровья',
+        'allowed_exit_time': '2026-08-06T14:00',
+        'campus': 'Mytishchi',
+    }
+    return render_template("test_app/student_application.html",
+                           application=application, code='123456')
+
+
 @app.route("/api/exit/my_application", methods=["POST"])
 def test_create_application_api():
     data = request.get_json(silent=True) or {}
