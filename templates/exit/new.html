@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка на выход — МШП</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f4f4f5;
+            --card: #ffffff;
+            --text: #27272a;
+            --muted: #71717a;
+            --border: #e4e4e7;
+            --accent: #3f3f46;
+            --accent-hover: #27272a;
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+            --danger: #b91c1c;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+            --success: #15803d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 72px 24px 24px;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            z-index: 10;
+        }
+
+        .nav__brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .nav__logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav__links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 20px;
+        }
+
+        .nav__links a:hover {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            padding: 28px;
+        }
+
+        .card__title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .card__subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 4px;
+            margin-bottom: 24px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text);
+            background: var(--card);
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.12);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .btn {
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--accent);
+            color: #fff;
+            transition: background 0.15s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .result--success {
+            display: block;
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success);
+        }
+
+        .result--error {
+            display: block;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <span class="nav__brand">
+            <span class="nav__logo">М</span>
+            МШП
+        </span>
+        <span class="nav__links">
+            <a href="/home">Главная</a>
+            <a href="/exit/history">История</a>
+            <a href="/">Выйти</a>
+        </span>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h1 class="card__title">Заявка на выход</h1>
+            <p class="card__subtitle">Создание цифрового пропуска на выход</p>
+
+            <form class="form" id="exit-form">
+                <div class="field">
+                    <label for="fio">ФИО</label>
+                    <input id="fio" name="fio" type="text" placeholder="Иванов Иван Иванович" required>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="group_number">Номер группы</label>
+                        <input id="group_number" name="group_number" type="number" min="1" placeholder="5" required>
+                    </div>
+                    <div class="field">
+                        <label for="group_letter">Буква</label>
+                        <input id="group_letter" name="group_letter" type="text" maxlength="1" placeholder="А" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="cause">Причина выхода</label>
+                    <textarea id="cause" name="cause" rows="3" placeholder="Например: по состоянию здоровья" required></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="time">Время выхода</label>
+                    <input id="time" name="time" type="datetime-local" required>
+                    <span class="hint">Планируемое время выхода.</span>
+                </div>
+
+                <button type="submit" class="btn" id="submit-btn">Создать заявку</button>
+            </form>
+
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('exit-form');
+        const result = document.getElementById('result');
+        const btn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            result.className = 'result';
+
+            const payload = {
+                fio: form.fio.value.trim(),
+                group_number: form.group_number.value,
+                group_letter: form.group_letter.value.trim().toUpperCase(),
+                cause: form.cause.value.trim(),
+                time: form.time.value,
+            };
+
+            try {
+                const res = await fetch('/api/exit/my_application', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+
+                if (res.ok && data.status === 'success') {
+                    result.className = 'result result--success';
+                    result.innerHTML = 'Заявка создана. ID: ' + data.application_id +
+                        '. Код доступа: <b>' + data.code + '</b>';
+                } else {
+                    result.className = 'result result--error';
+                    result.innerHTML = data.message || 'Ошибка при создании заявки';
+                }
+            } catch (err) {
+                result.className = 'result result--error';
+                result.innerHTML = 'Нет соединения с сервером';
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

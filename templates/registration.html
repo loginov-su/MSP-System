@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация — МШП</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f4f4f5;
+            --card: #ffffff;
+            --text: #27272a;
+            --muted: #71717a;
+            --border: #e4e4e7;
+            --accent: #3f3f46;
+            --accent-hover: #27272a;
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+            --danger: #b91c1c;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+            --success: #15803d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 440px;
+            padding: 32px;
+        }
+
+        .card__title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .card__subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 4px;
+            margin-bottom: 24px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .field input,
+        .field select {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text);
+            background: var(--card);
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.12);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn {
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--accent);
+            color: #fff;
+            transition: background 0.15s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .msg {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .msg--success {
+            display: block;
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success);
+        }
+
+        .msg--error {
+            display: block;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: var(--danger);
+        }
+
+        .login-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 class="card__title">Регистрация</h1>
+        <p class="card__subtitle">Создание аккаунта в системе</p>
+
+        <form class="form" id="reg-form">
+            <div class="field">
+                <label for="surname">Фамилия</label>
+                <input id="surname" name="surname" type="text" placeholder="Иванов" required>
+            </div>
+            <div class="field">
+                <label for="name">Имя</label>
+                <input id="name" name="name" type="text" placeholder="Иван" required>
+            </div>
+            <div class="field">
+                <label for="lastname">Отчество</label>
+                <input id="lastname" name="lastname" type="text" placeholder="Иванович">
+            </div>
+
+            <div class="field">
+                <label for="role">Роль</label>
+                <select id="role" name="role">
+                    <option value="student">Ученик</option>
+                    <option value="teacher">Преподаватель</option>
+                    <option value="guard">Охрана</option>
+                </select>
+            </div>
+
+            <div class="row" id="group-row" style="display:none;">
+                <div class="field">
+                    <label for="group_number">Номер группы</label>
+                    <input id="group_number" name="group_number" type="number" min="1" placeholder="5">
+                </div>
+                <div class="field">
+                    <label for="group_letter">Буква</label>
+                    <input id="group_letter" name="group_letter" type="text" maxlength="1" placeholder="А">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="login">Логин</label>
+                <input id="login" name="login" type="text" placeholder="ivanov" required>
+            </div>
+            <div class="field">
+                <label for="password">Пароль</label>
+                <input id="password" name="password" type="password" placeholder="••••••••" minlength="6" required>
+            </div>
+
+            <button type="submit" class="btn" id="submit-btn">Зарегистрироваться</button>
+        </form>
+
+        <div class="msg" id="msg"></div>
+
+        <span class="login-link">Уже есть аккаунт? <a href="/">Войти</a></span>
+    </div>
+
+    <script>
+        const role = document.getElementById('role');
+        const groupRow = document.getElementById('group-row');
+        const form = document.getElementById('reg-form');
+        const msg = document.getElementById('msg');
+        const btn = document.getElementById('submit-btn');
+
+        role.addEventListener('change', () => {
+            groupRow.style.display = role.value === 'student' ? 'grid' : 'none';
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            msg.className = 'msg';
+
+            const payload = {
+                surname: form.surname.value.trim(),
+                name: form.name.value.trim(),
+                lastname: form.lastname.value.trim(),
+                role: form.role.value,
+                group_number: form.group_number.value || null,
+                group_letter: form.group_letter.value.trim().toUpperCase() || null,
+                login: form.login.value.trim(),
+                password: form.password.value,
+            };
+
+            try {
+                const res = await fetch('/api/teacher/create_account', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+
+                if (res.ok && data.status === 'success') {
+                    msg.className = 'msg msg--success';
+                    msg.textContent = data.message || 'Аккаунт создан';
+                    setTimeout(() => window.location.href = '/', 1200);
+                } else {
+                    msg.className = 'msg msg--error';
+                    msg.textContent = data.message || 'Ошибка регистрации';
+                }
+            } catch (err) {
+                msg.className = 'msg msg--error';
+                msg.textContent = 'Нет соединения с сервером';
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

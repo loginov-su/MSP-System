@@ -1,11 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSPSYSTEM:Вход в аккунт</title>
+    <title>Вход — МШП</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f4f4f5;
+            --card: #ffffff;
+            --text: #27272a;
+            --muted: #71717a;
+            --border: #e4e4e7;
+            --accent: #3f3f46;
+            --accent-hover: #27272a;
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+            --danger: #b91c1c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            padding: 32px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .brand__logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .brand__title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand__subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .field input,
+        .field select {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text);
+            background: var(--card);
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.12);
+        }
+
+        .btn {
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--accent);
+            color: #fff;
+            transition: background 0.15s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .error {
+            margin-top: 16px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: var(--danger);
+            font-size: 14px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="card">
+        <div class="brand">
+            <div class="brand__logo">М</div>
+            <div class="brand__title">МШП</div>
+            <div class="brand__subtitle">Портал цифровых разрешений</div>
+        </div>
+
+        <form class="form" id="login-form">
+            <div class="field">
+                <label for="login">Логин</label>
+                <input id="login" name="login" type="text" placeholder="ivanov" autocomplete="username" required>
+            </div>
+
+            <div class="field">
+                <label for="password">Пароль</label>
+                <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+            </div>
+
+            <div class="field">
+                <label for="role">Роль</label>
+                <select id="role" name="role">
+                    <option value="student">Ученик</option>
+                    <option value="teacher">Преподаватель</option>
+                    <option value="guard">Охрана</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Войти</button>
+        </form>
+
+        <div class="error" id="error"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const errorBox = document.getElementById('error');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            errorBox.style.display = 'none';
+
+            const login = form.login.value.trim();
+            const password = form.password.value;
+
+            if (!login || !password) {
+                errorBox.textContent = 'Заполните логин и пароль';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            // TODO: заменить на реальную аутентификацию
+            console.log('login:', login, 'role:', form.role.value);
+            window.location.href = '/home';
+        });
+    </script>
 </body>
 </html>

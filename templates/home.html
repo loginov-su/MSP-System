@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная — МШП</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f4f4f5;
+            --card: #ffffff;
+            --text: #27272a;
+            --muted: #71717a;
+            --border: #e4e4e7;
+            --accent: #3f3f46;
+            --accent-hover: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav__brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .nav__logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav__links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 20px;
+        }
+
+        .nav__links a:hover {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .welcome h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .welcome p {
+            color: var(--muted);
+            margin-top: 6px;
+            font-size: 15px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            text-decoration: none;
+            color: var(--text);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card__icon {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .card__title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .card__desc {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <span class="nav__brand">
+            <span class="nav__logo">М</span>
+            МШП
+        </span>
+        <span class="nav__links">
+            <a href="/home">Главная</a>
+            <a href="#">Заявки</a>
+            <a href="#">Выйти</a>
+        </span>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h1>Добро пожаловать!</h1>
+            <p>Выберите сервис, чтобы продолжить</p>
+        </div>
+
+        <div class="cards">
+            <a class="card" href="/exit/new">
+                <div class="card__icon">📝</div>
+                <div class="card__title">Заявка на выход</div>
+                <div class="card__desc">Создать цифровой пропуск на выход в указанное время.</div>
+            </a>
+
+            <a class="card" href="/exit/history">
+                <div class="card__icon">🕘</div>
+                <div class="card__title">История заявок</div>
+                <div class="card__desc">Просмотреть прошлые и действующие заявки.</div>
+            </a>
+
+            <a class="card" href="#">
+                <div class="card__icon">🎫</div>
+                <div class="card__title">Пропуск гостя</div>
+                <div class="card__desc">Оформление пропуска для гостя (скоро).</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
