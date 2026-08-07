@@ -1,7 +1,13 @@
 .env
 .рус
+.рус/**
 .claude
 .cursor
+# Python
+__pycache__/
+*.pyc
+# Runtime data
+static/system_prompt.txt
 
 # Android / Gradle
 local.properties
