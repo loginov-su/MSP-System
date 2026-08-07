@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>МШП: Системный промт Кометы</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            max-width: 600px;
+            width: 90%;
+            transition: all 0.2s ease;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 600;
+            font-size: 28px;
+            color: #1e293b;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #e9edf2;
+            padding-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #334155;
+            letter-spacing: 0.3px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-size: 15px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            background: #fafcff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.5;
+            color: #0f172a;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background: white;
+        }
+
+        textarea::placeholder {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .status-message {
+            font-size: 14px;
+            color: #64748b;
+            transition: opacity 0.2s;
+            opacity: 0;
+        }
+
+        .status-message.visible {
+            opacity: 1;
+            color: #16a34a;
+        }
+
+        button {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: #1e293b;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.15);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .saved-hint {
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+            font-size: 14px;
+            color: #1e293b;
+            display: none;
+        }
+
+        .saved-hint.visible {
+            display: block;
+        }
+
+        .saved-hint strong {
+            color: #0f172a;
+        }
+
+        .saved-hint .preview {
+            font-family: 'Courier New', monospace;
+            background: #eef2f6;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 13px;
+            word-break: break-all;
+            max-width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            button {
+                justify-content: center;
+            }
+
+            .status-message {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Системный промт</h1>
+        <div class="subtitle">Комета · МШП</div>
+
+        <div class="input-group">
+            <label for="promptInput">Редактирование системного промта</label>
+            <textarea id="promptInput" placeholder="Введите системный промт, например: «Ты — полезный ассистент, который отвечает кратко и по делу.»"></textarea>
+        </div>
+
+        <div class="button-group">
+            <span id="statusMessage" class="status-message">✓ Сохранено</span>
+            <button id="saveButton">💾 Сохранить</button>
+        </div>
+
+        <div id="savedHint" class="saved-hint">
+            <strong>✔ Текущий промт сохранён:</strong>
+            <div id="previewText" class="preview">(пусто)</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const textarea = document.getElementById('promptInput');
+            const saveButton = document.getElementById('saveButton');
+            const statusMessage = document.getElementById('statusMessage');
+            const savedHint = document.getElementById('savedHint');
+            const previewText = document.getElementById('previewText');
+
+            // Загружаем сохранённый промт из localStorage (если есть)
+            const savedPrompt = localStorage.getItem('systemPrompt');
+            if (savedPrompt !== null) {
+                textarea.value = savedPrompt;
+                previewText.textContent = savedPrompt || '(пусто)';
+                savedHint.classList.add('visible');
+            }
+
+            // Функция сохранения
+            function savePrompt() {
+                const value = textarea.value.trim();
+
+                // Сохраняем в localStorage
+                localStorage.setItem('systemPrompt', value);
+
+                // Обновляем превью
+                previewText.textContent = value || '(пусто)';
+                savedHint.classList.add('visible');
+
+                // Показываем статус
+                statusMessage.textContent = '✓ Сохранено';
+                statusMessage.classList.add('visible');
+                statusMessage.style.color = '#16a34a';
+
+                // Скрываем статус через 2.5 секунды
+                clearTimeout(window.statusTimeout);
+                window.statusTimeout = setTimeout(() => {
+                    statusMessage.classList.remove('visible');
+                }, 2500);
+
+                // Анимация кнопки
+                saveButton.style.background = '#16a34a';
+                setTimeout(() => {
+                    saveButton.style.background = '#0f172a';
+                }, 300);
+            }
+
+            // Сохранение по клику
+            saveButton.addEventListener('click', savePrompt);
+
+            // Сохранение по Ctrl+Enter (Cmd+Enter на Mac)
+            textarea.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    savePrompt();
+                }
+            });
+
+            // Авто-сохранение при потере фокуса (опционально)
+            textarea.addEventListener('blur', () => {
+                // Можно раскомментировать, если нужно автосохранение при потере фокуса
+                // savePrompt();
+            });
+
+            // Показываем подсказку о сочетании клавиш
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const shortcutKey = isMac ? '⌘' : 'Ctrl';
+            textarea.placeholder = `Введите системный промт… (${shortcutKey}+Enter для сохранения)`;
+
+            // Если поле пустое, показываем пример
+            if (!textarea.value) {
+                textarea.placeholder = `Например: «Ты — эксперт по UX, даёшь чёткие рекомендации.» (${shortcutKey}+Enter)`;
+            }
+        })();
+    </script>
+</body>
+</html>
