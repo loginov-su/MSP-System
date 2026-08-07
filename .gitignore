@@ -2,3 +2,8 @@
 .рус
 .claude
 .cursor
+
+# Android / Gradle
+local.properties
+.gradle
+/build
