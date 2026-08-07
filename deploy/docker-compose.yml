@@ -22,6 +22,8 @@ services:
     image: postgres:16-alpine
     container_name: msp_db
     restart: unless-stopped
+    env_file:
+      - ../.env
     environment:
       - POSTGRES_USER=${POSTGRESQL_USER}
       - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
