@@ -24,8 +24,8 @@ def system_prompt_page():
 
 
 # Подключение API-модулей (blueprints)
-from api import ai_api
-from api import admin_api
+from api.ai import ai_api
+from api.admin import admin_api
 
 app.register_blueprint(ai_api.ai_api_bp)
 app.register_blueprint(admin_api.admin_api_bp)
