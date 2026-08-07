@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Главная — МШП</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <style>
+        :root {
+            --primary: #4A75FF;
+            --primary-2: #6C5CFF;
+            --primary-light: rgba(74,117,255,0.12);
+            --bg: #f2f2f6;
+            --block-bg: #ffffff;
+            --block-border: rgba(0,0,0,0.05);
+            --widget-bg: rgba(255,255,255,0.94);
+            --widget-border: rgba(0,0,0,0.06);
+            --widget-shadow: rgba(74,117,255,0.10);
+            --text: #11181c;
+            --muted: #71717a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Inter", sans-serif;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            background: var(--bg);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grad-corner {
+            position: fixed;
+            top: 0; left: 0;
+            width: 360px; height: 360px;
+            background: linear-gradient(-45deg, var(--primary-2), var(--primary));
+            border-radius: 0 0 100% 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.07;
+        }
+
+        /* ── Cover: лава-лампа ────────────────── */
+        .cover {
+            height: 42vh;
+            min-height: 280px;
+            position: relative;
+            border-radius: 0 0 28px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2f3d8f 0%, #4A75FF 40%, #6C5CFF 100%);
+        }
+
+        .lava {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            mix-blend-mode: screen;
+            opacity: 0.85;
+            will-change: transform;
+            animation: lavaFloat 18s ease-in-out infinite alternate;
+        }
+
+        .lava.l1 {
+            width: 320px; height: 320px;
+            left: -60px; bottom: -80px;
+            background: radial-gradient(circle at 40% 40%, #ff9a5a, #ff4d6d, transparent 70%);
+        }
+        .lava.l2 {
+            width: 280px; height: 280px;
+            right: -50px; top: -40px;
+            background: radial-gradient(circle at 50% 50%, #5affd0, #4a9dff, transparent 70%);
+            animation-duration: 22s;
+            animation-delay: -4s;
+        }
+        .lava.l3 {
+            width: 240px; height: 240px;
+            left: 30%; top: 30%;
+            background: radial-gradient(circle at 50% 50%, #ffd45a, #ff7a5a, transparent 70%);
+            animation-duration: 26s;
+            animation-delay: -8s;
+        }
+        .lava.l4 {
+            width: 200px; height: 200px;
+            right: 20%; bottom: 10%;
+            background: radial-gradient(circle at 50% 50%, #b45aff, #4A75FF, transparent 70%);
+            animation-duration: 20s;
+            animation-delay: -12s;
+        }
+
+        @keyframes lavaFloat {
+            0%   { transform: translate(0, 0) scale(1); }
+            25%  { transform: translate(40px, -30px) scale(1.15); }
+            50%  { transform: translate(-30px, 40px) scale(0.9); }
+            75%  { transform: translate(25px, 20px) scale(1.2); }
+            100% { transform: translate(-40px, -40px) scale(1); }
+        }
+
+        .cover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(165deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.0) 60%, rgba(0,0,0,0.12) 100%);
+            pointer-events: none;
+        }
+
+        .cover-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+        }
+        .brand-logo {
+            width: 32px; height: 32px; border-radius: 9px;
+            background: rgba(255,255,255,0.28);
+            backdrop-filter: blur(8px);
+            color: #fff; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px;
+        }
+        .brand-title { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: 0.3px; }
+
+        .cover-actions { display: flex; align-items: center; gap: 8px; }
+
+        .cover-btn {
+            width: 38px; height: 38px;
+            border-radius: 11px;
+            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(0,0,0,0.18);
+            backdrop-filter: blur(8px);
+            color: rgba(255,255,255,0.92);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .cover-btn:hover { background: rgba(0,0,0,0.30); }
+        .cover-btn svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .cover-avatar-link {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.55);
+            overflow: hidden;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .cover-avatar {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #6C5CFF 0%, #4A75FF 100%);
+        }
+
+        .cover-greeting {
+            padding: 0 22px 76px;
+            position: relative;
+            z-index: 2;
+        }
+        .greeting-sub {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 3px;
+        }
+        .greeting-name {
+            font-size: 30px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.4px;
+            line-height: 1.15;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.18);
+        }
+
+        /* ── Services block ───────────────────── */
+        .services-block {
+            background: var(--block-bg);
+            border: 1px solid var(--block-border);
+            border-radius: 28px 28px 0 0;
+            padding: 24px 18px calc(56px + 24px);
+            margin: -52px 12px 0;
+            position: relative;
+            z-index: 3;
+            box-shadow: 0 -6px 30px rgba(0,0,0,0.09);
+            min-height: calc(100vh - 42vh + 52px);
+        }
+
+        /* ── Widget grid ──────────────────────── */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .widget-large {
+            grid-row: span 3;
+            background: var(--widget-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 20px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text);
+            box-shadow: 0 3px 14px var(--widget-shadow);
+            border: 1px solid var(--widget-border);
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 210px;
+        }
+        .widget-large:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--widget-shadow); }
+        .widget-large:active { transform: scale(0.98); }
+
+        .wl-icon {
+            width: 46px; height: 46px;
+            background: var(--primary-light);
+            border-radius: 13px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary);
+        }
+        .wl-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .wl-title { font-size: 16px; font-weight: 800; line-height: 1.25; margin-bottom: 5px; color: var(--text); }
+        .wl-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+        .widget-small {
+            background: var(--widget-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 16px 14px;
+            text-decoration: none;
+            color: var(--text);
+            box-shadow: 0 3px 14px var(--widget-shadow);
+            border: 1px solid var(--widget-border);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .widget-small:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--widget-shadow); }
+        .widget-small:active { transform: scale(0.98); }
+
+        .ws-icon {
+            width: 40px; height: 40px;
+            background: var(--primary-light);
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary);
+            transition: transform 0.2s;
+            font-size: 20px;
+            line-height: 1;
+        }
+        .widget-small:hover .ws-icon { transform: scale(1.1) rotate(-5deg); }
+        .ws-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .ws-title { font-size: 13px; font-weight: 700; line-height: 1.3; }
+
+        .ws-weather-temp { font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+        .ws-weather-desc { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+        .ws-schedule-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+        .ws-schedule-lesson { font-size: 13px; font-weight: 800; color: var(--text); line-height: 1.2; }
+        .ws-schedule-time { font-size: 11px; color: var(--muted); font-weight: 600; }
+        .ws-schedule-bar { height: 3px; background: var(--widget-border); border-radius: 2px; overflow: hidden; margin-top: 2px; }
+        .ws-schedule-progress { height: 100%; background: var(--primary); border-radius: 2px; transition: width 1s linear; }
+
+        /* ── Section header ───────────────────── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 0 13px;
+        }
+        .section-title { font-size: 16px; font-weight: 800; color: var(--text); }
+        .edit-toggle-btn {
+            font-size: 13px; font-weight: 700;
+            color: var(--primary);
+            background: none; border: none;
+            cursor: pointer; padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .edit-toggle-btn:hover { background: var(--primary-light); }
+
+        /* ── Apps icon grid ───────────────────── */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px 8px;
+        }
+        .app-item {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 7px; text-decoration: none;
+            transition: transform 0.2s;
+            position: relative; cursor: pointer;
+            user-select: none; -webkit-user-select: none;
+        }
+        .app-item:hover { transform: translateY(-4px); }
+        .app-item:active { transform: scale(0.93); }
+        .app-icon {
+            width: 64px; height: 64px;
+            background: var(--widget-bg);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 3px 14px var(--widget-shadow);
+            border: 1px solid var(--widget-border);
+            color: var(--primary); transition: box-shadow 0.2s;
+            position: relative;
+        }
+        .app-item:hover .app-icon { box-shadow: 0 8px 22px var(--widget-shadow); }
+        .app-icon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .app-label { font-size: 11px; font-weight: 600; color: var(--text); text-align: center; line-height: 1.3; max-width: 64px; }
+
+        /* Edit mode */
+        body.edit-mode .app-item { cursor: move; }
+        body.edit-mode .app-item a { pointer-events: none; }
+        @keyframes wobble { 0%,100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
+        body.edit-mode .app-icon { animation: wobble 0.4s ease-in-out infinite; }
+        .app-remove-btn {
+            position: absolute; top: -6px; left: -6px;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: #ff3b30; color: #fff;
+            font-size: 13px; font-weight: 900; line-height: 1;
+            border: 2px solid var(--block-bg);
+            display: none; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 10;
+        }
+        body.edit-mode .app-remove-btn { display: flex; }
+        .sortable-ghost .app-icon { opacity: 0.3; background: var(--primary-light) !important; border: 2px dashed var(--primary) !important; }
+        .sortable-ghost .app-label { opacity: 0.3; }
+
+        /* ── Bottom nav ───────────────────────── */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-top: 1px solid rgba(0,0,0,0.07);
+            display: flex;
+            align-items: stretch;
+            justify-content: space-around;
+            padding: 0 8px env(safe-area-inset-bottom, 8px);
+            z-index: 100;
+            height: 56px;
+        }
+        .bottom-nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 3px; text-decoration: none;
+            color: var(--muted); flex: 1; padding: 6px 4px;
+            border-radius: 14px;
+            transition: color 0.2s, background 0.2s;
+            cursor: pointer; background: none; border: none;
+            font-family: inherit; min-width: 0;
+        }
+        .bottom-nav-item:hover, .bottom-nav-item.active { color: var(--primary); }
+        .bottom-nav-item svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+        .bottom-nav-label { font-size: 10px; font-weight: 700; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        @media (min-width: 900px) {
+            .bottom-nav { display: none; }
+            .cover { height: 38vh; }
+            .services-block {
+                max-width: 860px;
+                margin: -52px auto 0;
+                border-radius: 28px 28px 0 0;
+                padding-bottom: 40px;
+            }
+            .apps-grid { grid-template-columns: repeat(6, 1fr); }
+        }
+        @media (min-width: 640px) {
+            .services-block { margin: -52px 20px 0; }
+        }
+        @media (max-width: 400px) {
+            .greeting-name { font-size: 26px; }
+            .services-block { padding: 20px 14px calc(56px + 16px); margin: -48px 8px 0; }
+            .widgets-grid { gap: 10px; }
+            .widget-large { min-height: 180px; border-radius: 18px; }
+            .widget-small { border-radius: 18px; }
+            .apps-grid { grid-template-columns: repeat(3, 1fr); gap: 14px 6px; }
+            .app-icon { width: 58px; height: 58px; border-radius: 14px; }
+            .app-icon svg { width: 24px; height: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="grad-corner"></div>
+
+<div class="cover">
+    <div class="lava l1"></div>
+    <div class="lava l2"></div>
+    <div class="lava l3"></div>
+    <div class="lava l4"></div>
+
+    <div class="cover-topbar">
+        <a href="#" class="brand">
+            <span class="brand-logo">М</span>
+            <span class="brand-title">МШП</span>
+        </a>
+        <div class="cover-actions">
+            <button class="cover-btn" aria-label="Уведомления">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </button>
+            <a href="#" class="cover-avatar-link" aria-label="Профиль">
+                <div class="cover-avatar"></div>
+            </a>
+        </div>
+    </div>
+
+    <div class="cover-greeting">
+        <div class="greeting-sub">Привет,</div>
+        <div class="greeting-name" id="greetingName">Ученик!</div>
+    </div>
+</div>
+
+<div class="services-block">
+
+    <div class="widgets-grid">
+
+        <!-- Большой: Заявка на выход -->
+        <a href="/exit/new" class="widget-large">
+            <div class="wl-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </div>
+            <div>
+                <div class="wl-title">Заявка на выход</div>
+                <div class="wl-desc">Создать цифровой пропуск на выход в указанное время</div>
+            </div>
+        </a>
+
+        <!-- Малый: Погода -->
+        <div class="widget-small">
+            <div class="ws-icon" id="weatherIcon">☀</div>
+            <div>
+                <div class="ws-weather-temp" id="weatherTemp">--°</div>
+                <div class="ws-weather-desc" id="weatherDesc">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- Малый: Расписание звонков -->
+        <div class="widget-small">
+            <div class="ws-icon">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </div>
+            <div>
+                <div class="ws-schedule-label" id="scheduleLabel">Сейчас</div>
+                <div class="ws-schedule-lesson" id="scheduleLesson">—</div>
+                <div class="ws-schedule-time" id="scheduleTime"></div>
+            </div>
+            <div class="ws-schedule-bar">
+                <div class="ws-schedule-progress" id="scheduleProgress" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- Малый: Мои заявки -->
+        <a href="/exit/history" class="widget-small">
+            <div class="ws-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                </svg>
+            </div>
+            <div class="ws-title">Мои заявки</div>
+        </a>
+
+    </div>
+
+    <!-- Иконки-приложения -->
+    <div class="section-header">
+        <p class="section-title">Сервисы</p>
+        <button class="edit-toggle-btn" id="editToggleBtn" onclick="toggleEditMode()">Изменить</button>
+    </div>
+    <div class="apps-grid" id="appsGrid">
+
+        <div class="app-item" data-id="exit" onclick="handleAppClick(event, '/exit/new')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'exit')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </div>
+            <span class="app-label">Выход</span>
+        </div>
+
+        <div class="app-item" data-id="history" onclick="handleAppClick(event, '/exit/history')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'history')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </div>
+            <span class="app-label">История</span>
+        </div>
+
+        <div class="app-item" data-id="guest" onclick="handleAppClick(event, '/guest')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'guest')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <span class="app-label">Гость</span>
+        </div>
+
+        <div class="app-item" data-id="guard" onclick="handleAppClick(event, '/guard')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'guard')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <span class="app-label">Охрана</span>
+        </div>
+
+        <div class="app-item" data-id="guest-pass" onclick="handleAppClick(event, '/guest')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'guest-pass')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </div>
+            <span class="app-label">Пропуск</span>
+        </div>
+
+        <div class="app-item" data-id="news" onclick="handleAppClick(event, '/news')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'news')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                    <path d="M18 14h-8"></path>
+                    <path d="M15 18h-5"></path>
+                    <path d="M10 6h8v4h-8V6z"></path>
+                </svg>
+            </div>
+            <span class="app-label">Новости</span>
+        </div>
+
+        <div class="app-item" data-id="events" onclick="handleAppClick(event, '/events')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'events')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </div>
+            <span class="app-label">Мероприятия</span>
+        </div>
+
+        <div class="app-item" data-id="schedule" onclick="handleAppClick(event, '/schedule')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'schedule')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </div>
+            <span class="app-label">Расписание</span>
+        </div>
+
+        <div class="app-item" data-id="campus-map" onclick="handleAppClick(event, '/campus-map')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'campus-map')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
+            </div>
+            <span class="app-label">Карта школы</span>
+        </div>
+
+        <div class="app-item" data-id="smartstop" onclick="handleAppClick(event, '/smartstop')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'smartstop')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <rect x="9" y="9" width="6" height="6" rx="1"></rect>
+                </svg>
+            </div>
+            <span class="app-label">Смартстоп</span>
+        </div>
+
+        <div class="app-item" data-id="profile" onclick="handleAppClick(event, '/profile')">
+            <div class="app-icon">
+                <button class="app-remove-btn" onclick="removeApp(event, 'profile')">×</button>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <span class="app-label">Профиль</span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Нижняя навигация -->
+<nav class="bottom-nav" aria-label="Навигация">
+    <a href="/home" class="bottom-nav-item active" aria-label="Главная">
+        <svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span class="bottom-nav-label">Главная</span>
+    </a>
+    <a href="/exit/new" class="bottom-nav-item" aria-label="Заявки">
+        <svg viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+        </svg>
+        <span class="bottom-nav-label">Заявки</span>
+    </a>
+    <a href="#" class="bottom-nav-item" aria-label="Профиль">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span class="bottom-nav-label">Профиль</span>
+    </a>
+    <a href="/exit/history" class="bottom-nav-item" aria-label="История">
+        <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span class="bottom-nav-label">История</span>
+    </a>
+</nav>
+
+<script>
+    /* ── Имя ─────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+        updateSchedule();
+        setInterval(updateSchedule, 30000);
+        loadWeather();
+        loadAppsOrder();
+    });
+
+    /* ── Погода (open-meteo) ─────────────────── */
+    function weatherLabel(code) {
+        if ([0,1].includes(code)) return ['Ясно', '☀'];
+        if ([2,3].includes(code)) return ['Облачно', '☁'];
+        if ([45,48].includes(code)) return ['Туман', '🌫'];
+        if ([51,53,55,61,63,65,80,81,82].includes(code)) return ['Дождь', '☂'];
+        if ([71,73,75,77,85,86].includes(code)) return ['Снег', '❄'];
+        if ([95,96,99].includes(code)) return ['Гроза', '⚡'];
+        return ['Погода', '☀'];
+    }
+
+    function setWeather(temp, code) {
+        const [label, icon] = weatherLabel(Number(code));
+        const t = document.getElementById('weatherTemp');
+        const d = document.getElementById('weatherDesc');
+        const i = document.getElementById('weatherIcon');
+        if (t) t.textContent = `${Math.round(temp)}°`;
+        if (d) d.textContent = label;
+        if (i) i.textContent = icon;
+    }
+
+    async function fetchWeather(lat, lon) {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
+        setWeather(data.current.temperature_2m, data.current.weather_code);
+    }
+
+    function loadWeather() {
+        const fallback = () => fetchWeather(55.7558, 37.6173).catch(() => {
+            const t = document.getElementById('weatherTemp');
+            const d = document.getElementById('weatherDesc');
+            if (t) t.textContent = '--°';
+            if (d) d.textContent = 'Нет данных';
+        });
+        if (!navigator.geolocation) { fallback(); return; }
+        navigator.geolocation.getCurrentPosition(
+            p => fetchWeather(p.coords.latitude, p.coords.longitude).catch(fallback),
+            fallback,
+            { timeout: 2500, maximumAge: 10 * 60 * 1000 }
+        );
+    }
+
+    /* ── Расписание звонков ──────────────────── */
+    const schedule = [
+        { start: '08:30', end: '09:15', name: '1 урок' },
+        { start: '09:15', end: '09:25', name: 'Перемена' },
+        { start: '09:25', end: '10:10', name: '2 урок' },
+        { start: '10:10', end: '10:25', name: 'Перемена' },
+        { start: '10:25', end: '11:10', name: '3 урок' },
+        { start: '11:10', end: '11:25', name: 'Перемена' },
+        { start: '11:25', end: '12:10', name: '4 урок' },
+        { start: '12:10', end: '12:30', name: 'Перемена' },
+        { start: '12:30', end: '13:15', name: '5 урок' },
+        { start: '13:15', end: '13:25', name: 'Перемена' },
+        { start: '13:25', end: '14:10', name: '6 урок' },
+        { start: '14:10', end: '14:20', name: 'Перемена' },
+        { start: '14:20', end: '15:05', name: '7 урок' },
+        { start: '15:05', end: '15:10', name: 'Перемена' },
+        { start: '15:10', end: '15:55', name: '8 урок' },
+    ];
+
+    function timeToMin(t) { const [h,m] = t.split(':').map(Number); return h*60+m; }
+
+    function updateSchedule() {
+        const now = new Date();
+        const cur = now.getHours() * 60 + now.getMinutes();
+        const label = document.getElementById('scheduleLabel');
+        const lesson = document.getElementById('scheduleLesson');
+        const time = document.getElementById('scheduleTime');
+        const bar = document.getElementById('scheduleProgress');
+
+        let found = null;
+        for (const s of schedule) {
+            const st = timeToMin(s.start), en = timeToMin(s.end);
+            if (cur >= st && cur < en) { found = {...s, st, en, current: true}; break; }
+            if (cur < st) { found = {...s, st, en, current: false}; break; }
+        }
+
+        if (!found) {
+            if (label) label.textContent = 'Занятий нет';
+            if (lesson) lesson.textContent = 'День завершён';
+            if (time) time.textContent = '';
+            if (bar) bar.style.width = '100%';
+            return;
+        }
+
+        const pct = found.current ? Math.round(((cur - found.st) / (found.en - found.st)) * 100) : 0;
+        if (label) label.textContent = found.current ? 'Сейчас' : 'Следующее';
+        if (lesson) lesson.textContent = found.name;
+        if (time) time.textContent = `${found.start} – ${found.end}`;
+        if (bar) bar.style.width = pct + '%';
+    }
+
+    /* ── Режим редактирования ────────────────── */
+    const APPS_STORAGE_KEY = 'msp.home.apps.v1';
+    let sortableInstance = null;
+    let isEditMode = false;
+
+    function loadAppsOrder() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(APPS_STORAGE_KEY) || 'null');
+            if (!saved || !Array.isArray(saved)) return;
+            const grid = document.getElementById('appsGrid');
+            saved.forEach(id => {
+                const el = grid.querySelector(`[data-id="${id}"]`);
+                if (el) grid.appendChild(el);
+            });
+            Array.from(grid.querySelectorAll('.app-item')).forEach(el => {
+                if (!saved.includes(el.getAttribute('data-id'))) el.style.display = 'none';
+            });
+        } catch(e) {}
+    }
+
+    function saveAppsOrder() {
+        const grid = document.getElementById('appsGrid');
+        const order = Array.from(grid.querySelectorAll('.app-item'))
+            .filter(el => el.style.display !== 'none')
+            .map(el => el.getAttribute('data-id'));
+        localStorage.setItem(APPS_STORAGE_KEY, JSON.stringify(order));
+    }
+
+    function handleAppClick(e, url) {
+        if (isEditMode) { e.preventDefault(); return; }
+        window.location.href = url;
+    }
+
+    function removeApp(e, id) {
+        e.stopPropagation(); e.preventDefault();
+        const grid = document.getElementById('appsGrid');
+        const el = grid.querySelector(`[data-id="${id}"]`);
+        if (el) el.style.display = 'none';
+        saveAppsOrder();
+    }
+
+    function toggleEditMode() {
+        isEditMode = !isEditMode;
+        document.body.classList.toggle('edit-mode', isEditMode);
+        const btn = document.getElementById('editToggleBtn');
+
+        if (isEditMode) {
+            btn.textContent = 'Готово';
+            const grid = document.getElementById('appsGrid');
+            Array.from(grid.querySelectorAll('.app-item')).forEach(el => { el.style.display = ''; });
+            if (!sortableInstance) {
+                sortableInstance = new Sortable(document.getElementById('appsGrid'), {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    delay: 80,
+                    delayOnTouchOnly: true,
+                    touchStartThreshold: 3,
+                    onEnd: saveAppsOrder
+                });
+            }
+        } else {
+            btn.textContent = 'Изменить';
+            saveAppsOrder();
+        }
+    }
+</script>
+</body>
+</html>
