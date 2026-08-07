@@ -1,9 +1,0 @@
-flask
-flask-login
-flask-bcrypt
-requests
-python-dotenv
-sqlalchemy
-openpyxl
-bcrypt
-gunicorn
