@@ -7,3 +7,4 @@ sqlalchemy
 openpyxl
 bcrypt
 gunicorn
+psycopg2-binary
