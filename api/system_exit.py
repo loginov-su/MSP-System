@@ -99,25 +99,41 @@ def history():
 
 
 
-# API для того чтобы искать людей для цифровых рарзешений #
 @app.route('/api/teacher/exit_application/search')
 @login_required
 def searh_name():
+    # 1. Проверка прав доступа
+    if not getattr(current_user, 'is_dostup', False): 
+        return render_template("auth/not_dostup.html"), 403
 
-     # Перед тем как дать доступ к API, проверяем есть ли пользователь #
-     if not  current_user.is_dostup: return render_template("auth/not_dostup.html")
-     ull_name = request.args.get('fio')
-     name, surname, lastname = split_full_name(full_name)
+    # 2. Получение и обработка строки ФИО
+    full_name = request.args.get('fio', '').strip()
+    if not full_name:
+        return jsonify([])
 
-# Поиск #
-query = query.filter(student.campus == current_user.campus)
+    from utils import split_full_name
+    name, surname, lastname = split_full_name(full_name)
 
-results = query.all()
-result_list = []
-seen_students = set()
-for student_info in results:
+    # 3. Формирование запроса к БД и фильтрация по кампусу
+    # Замените 'Student' на точное имя вашей модели (класса) в базе данных
+    query = Student.query.filter(Student.campus == current_user.campus)
+
+    # 4. Фильтрация по совпадению ФИО (регистронезависимый поиск по подстроке)
+    if surname:
+        query = query.filter(Student.surname.ilike(f"%{surname}%"))
+    if name:
+        query = query.filter(Student.name.ilike(f"%{name}%"))
+    if lastname:
+        query = query.filter(Student.lastname.ilike(f"%{lastname}%"))
+
+    # 5. Получение результатов и удаление дубликатов
+    results = query.all()
+    result_list = []
+    seen_students = set()
+
+    for student_info in results:
         fio = f'{student_info.surname} {student_info.name} {student_info.lastname}'.strip()
-        student_class = f'{student_info.group_number}{student_info.group_letter}'
+        student_class = f'{student_info.group_number}{student_info.group_letter}'.strip()
         unique_key = f'{fio}|{student_class}'
         
         if unique_key not in seen_students:
@@ -127,4 +143,4 @@ for student_info in results:
             })
             seen_students.add(unique_key)
 
-return jsonify(result_list)
+    return jsonify(result_list)

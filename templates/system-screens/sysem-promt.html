@@ -210,6 +210,8 @@
         </div>
     </div>
 
+    <div id="loadingBar" class="status-message" style="opacity:0; color:#3b82f6;">Загрузка промта…</div>
+
     <script>
         (function() {
             const textarea = document.getElementById('promptInput');
@@ -218,42 +220,65 @@
             const savedHint = document.getElementById('savedHint');
             const previewText = document.getElementById('previewText');
 
-            // Загружаем сохранённый промт из localStorage (если есть)
-            const savedPrompt = localStorage.getItem('systemPrompt');
-            if (savedPrompt !== null) {
-                textarea.value = savedPrompt;
-                previewText.textContent = savedPrompt || '(пусто)';
-                savedHint.classList.add('visible');
+            // Загружаем сохранённый промт с сервера
+            async function loadPrompt() {
+                try {
+                    const res = await fetch('/api/system/prompt');
+                    const data = await res.json();
+                    const prompt = data.prompt && data.prompt.trim();
+                    textarea.value = prompt || '';
+                    previewText.textContent = prompt || '(пусто)';
+                    if (prompt) savedHint.classList.add('visible');
+                } catch (err) {
+                    console.error('Не удалось загрузить промт:', err);
+                }
             }
 
-            // Функция сохранения
-            function savePrompt() {
+            // Функция сохранения на сервер
+            async function savePrompt() {
                 const value = textarea.value.trim();
+                if (!value) {
+                    statusMessage.textContent = 'Промт не может быть пустым';
+                    statusMessage.style.color = '#dc2626';
+                    statusMessage.classList.add('visible');
+                    clearTimeout(window.statusTimeout);
+                    window.statusTimeout = setTimeout(() => statusMessage.classList.remove('visible'), 2500);
+                    return;
+                }
 
-                // Сохраняем в localStorage
-                localStorage.setItem('systemPrompt', value);
+                try {
+                    const res = await fetch('/api/system/prompt', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: value })
+                    });
+                    const data = await res.json();
 
-                // Обновляем превью
-                previewText.textContent = value || '(пусто)';
-                savedHint.classList.add('visible');
+                    previewText.textContent = value;
+                    savedHint.classList.add('visible');
 
-                // Показываем статус
-                statusMessage.textContent = '✓ Сохранено';
-                statusMessage.classList.add('visible');
-                statusMessage.style.color = '#16a34a';
+                    if (data.ok) {
+                        statusMessage.textContent = '✓ Сохранено';
+                        statusMessage.style.color = '#16a34a';
+                    } else {
+                        statusMessage.textContent = '✕ ' + (data.error || 'Ошибка');
+                        statusMessage.style.color = '#dc2626';
+                    }
+                    statusMessage.classList.add('visible');
 
-                // Скрываем статус через 2.5 секунды
-                clearTimeout(window.statusTimeout);
-                window.statusTimeout = setTimeout(() => {
-                    statusMessage.classList.remove('visible');
-                }, 2500);
-
-                // Анимация кнопки
-                saveButton.style.background = '#16a34a';
-                setTimeout(() => {
-                    saveButton.style.background = '#0f172a';
-                }, 300);
+                    clearTimeout(window.statusTimeout);
+                    window.statusTimeout = setTimeout(() => statusMessage.classList.remove('visible'), 2500);
+                } catch (err) {
+                    statusMessage.textContent = '✕ Ошибка сети';
+                    statusMessage.style.color = '#dc2626';
+                    statusMessage.classList.add('visible');
+                    clearTimeout(window.statusTimeout);
+                    window.statusTimeout = setTimeout(() => statusMessage.classList.remove('visible'), 2500);
+                }
             }
+
+            // Загрузка при открытии
+            loadPrompt();
 
             // Сохранение по клику
             saveButton.addEventListener('click', savePrompt);
@@ -264,12 +289,6 @@
                     e.preventDefault();
                     savePrompt();
                 }
-            });
-
-            // Авто-сохранение при потере фокуса (опционально)
-            textarea.addEventListener('blur', () => {
-                // Можно раскомментировать, если нужно автосохранение при потере фокуса
-                // savePrompt();
             });
 
             // Показываем подсказку о сочетании клавиш

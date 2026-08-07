@@ -1,0 +1,15 @@
+.env
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+static/app/app/build/
+static/app/.gradle/
+static/app/build/
+static/app/local.properties
+static/system_prompt.txt
+.venv
+venv/
+*.md
