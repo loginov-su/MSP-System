@@ -111,7 +111,7 @@ def searh_name():
     if not full_name:
         return jsonify([])
 
-    # Разбиваем ФИО (предполагается, что функция split_full_name у вас определена)
+    from utils import split_full_name
     name, surname, lastname = split_full_name(full_name)
 
     # 3. Формирование запроса к БД и фильтрация по кампусу

@@ -1,11 +1,12 @@
+import os
 import config
-from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, send_from_directory
-from flask_bcrypt import Bcrypt
-from flask_login import current_user, login_manager, login_required
+
+import db_system
 
 
 app = Flask(__name__)
+db_system.init_app(app)
 
 
 @app.route("/app")
@@ -24,11 +25,18 @@ def system_prompt_page():
 
 # Подключение API-модулей (blueprints)
 from api import ai_api
+from api import admin_api
 
 app.register_blueprint(ai_api.ai_api_bp)
+app.register_blueprint(admin_api.admin_api_bp)
 
 
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=9000)
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(
+        host=os.environ.get("FLASK_HOST", "0.0.0.0"),
+        port=int(os.environ.get("FLASK_PORT", "9000")),
+        debug=debug,
+    )

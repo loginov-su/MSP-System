@@ -18,6 +18,10 @@ POSTGRESQL_DBNAME=os.environ["POSTGRESQL_DBNAME"]
 SECRET_KEY=os.environ["SECRET_KEY"]
 
 
+# Redis #
+REDIS_URL=os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+
+
 
 
 # Пароль для страницы охраны #
